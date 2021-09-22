@@ -1,0 +1,71 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">WEB PROGRAMMING SHOP</h1>
+            <h3 class="jumbotron-heading">All lekProducts</h3>
+        </div>
+    </section>
+
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-12" th:if="${lekProducts.size() > 0}">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Product name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Manufacturer</th>
+                            <th scope="col">Category</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lekProduct : ${lekProducts}" class="lekProduct">
+                            <td th:text="${lekProduct.getName()}"></td>
+                            <td th:text="${lekProduct.getPrice()}"></td>
+                            <td th:text="${lekProduct.getManufacturer() != null}
+                            ? ${lekProduct.getManufacturer().getName()} : 'No Manufacturer'"></td>
+                            <td th:text="${lekProduct.getCategory() != null}
+                            ? ${lekProduct.getCategory().getName()} : 'No Category'"></td>
+                            <td class="text-right">
+                                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <form th:action="@{'/lekProducts/delete/{id}' (id=${lekProduct.getId()})}"
+                                          th:method="DELETE">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger delete-lekProduct">
+                                            <i class="fa fa-trash">Delete</i>
+                                        </button>
+                                    </form>
+                                </th:block>
+                                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <a th:href="@{'/lekProducts/edit-form/{id}' (id=${lekProduct.getId()})}"
+                                       class="btn btn-sm btn-info edit-lekProduct">
+                                        <i class="fa fa-trash">Edit</i>
+                                    </a>
+                                </th:block>
+                                <form th:action="@{'/shopping-cart/add-lekProduct/{id}' (id=${lekProduct.getId()})}"
+                                      th:method="POST"
+                                      sec:authorize="isAuthenticated()">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-primary cart-lekProduct">
+                                        <i class="fa fa-trash">Add lekProduct to cart</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col mb-3">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a href="/lekProducts/add-form" class="btn btn-block btn-dark add-lekProduct-btn">
+                            Add new lekProduct
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
